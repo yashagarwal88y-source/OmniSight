@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.png
+.env
+test_key.py
+list_models.py
+list_groq_models.py
