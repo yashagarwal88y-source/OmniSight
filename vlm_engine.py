@@ -4,7 +4,7 @@ import os
 from openai import OpenAI
 
 # 1. Paste your OpenRouter API key here (starts with sk-or-v1-...)
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
