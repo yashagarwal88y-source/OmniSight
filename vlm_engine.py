@@ -2,9 +2,15 @@ import base64
 import json
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
 
-# 1. Paste your OpenRouter API key here (starts with sk-or-v1-...)
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+# Load key from .env file into os.environ
+load_dotenv()
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not OPENROUTER_API_KEY:
+    raise ValueError("OPENROUTER_API_KEY missing! Please set it in your .env file.")
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -17,10 +23,6 @@ def encode_image_to_base64(image_path: str) -> str:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 def analyze_ui_and_generate_fix(image_path: str, html_path: str) -> dict:
-    """
-    Sends screenshot and raw HTML to Gemini 2.0 Flash Lite via OpenRouter
-    to audit UI bugs and output a JSON CSS fix.
-    """
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image file not found: {image_path}")
     if not os.path.exists(html_path):
