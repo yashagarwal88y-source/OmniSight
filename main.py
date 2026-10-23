@@ -2,24 +2,26 @@ import os
 import json
 from vlm_engine import analyze_ui_and_generate_fix
 
-def apply_css_fix(html_file_path: str, css_code: str):
-    """Injects the generated CSS fix into the HTML document inside a <style> tag."""
-    with open(html_file_path, "r", encoding="utf-8") as f:
-        html_content = f.read()
+def apply_css_fix(html_file_path: str, css_code: str) -> bool:
+    """Safely injects generated CSS fix into HTML file inside a style block."""
+    try:
+        with open(html_file_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
 
-    style_injection = f"\n<style>\n/* Auto-applied by OmniSight Self-Healing Agent */\n{css_code}\n</style>\n"
+        style_injection = f"\n<style>\n/* Auto-applied by OmniSight Agent */\n{css_code}\n</style>\n"
+        
+        if "</head>" in html_content:
+            updated_html = html_content.replace("</head>", f"{style_injection}</head>")
+        else:
+            updated_html = style_injection + html_content
+
+        with open(html_file_path, "w", encoding="utf-8") as f:
+            f.write(updated_html)
+        return True
+    except Exception as e:
+        print(f"[-] Failed to apply CSS patch: {e}")
+        return False
     
-    # Inject before </head> if it exists, otherwise append at the top
-    if "</head>" in html_content:
-        updated_html = html_content.replace("</head>", f"{style_injection}</head>")
-    else:
-        updated_html = style_injection + html_content
-
-    with open(html_file_path, "w", encoding="utf-8") as f:
-        f.write(updated_html)
-
-    print(f"[+] Successfully injected CSS fix into {html_file_path}")
-
 def run_omnisight_pipeline():
     print("=== OmniSight Autonomous Visual QA & Self-Healing Pipeline ===")
     
@@ -46,6 +48,8 @@ def run_omnisight_pipeline():
             print("\n[-] Warning: Bug detected but no CSS fix provided in response.")
     else:
         print("\n[+] No visual bugs detected. UI passed QA audit.")
+
+
 
 if __name__ == "__main__":
     run_omnisight_pipeline()
