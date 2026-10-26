@@ -4,7 +4,6 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Load key from .env file into os.environ
 load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -18,9 +17,17 @@ client = OpenAI(
 )
 
 def encode_image_to_base64(image_path: str) -> str:
-    """Converts a local image file to a Base64 string."""
+    """Converts a local image file into a Base64 string for API payload inclusion."""
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
+
+def validate_audit_response(data: dict) -> dict:
+    """Ensures required schema keys exist in VLM output to prevent downstream crashes."""
+    required_keys = ["has_visual_bug", "bug_description", "affected_selector", "css_fix"]
+    for key in required_keys:
+        if key not in data:
+            data[key] = False if key == "has_visual_bug" else None
+    return data
 
 def analyze_ui_and_generate_fix(image_path: str, html_path: str) -> dict:
     if not os.path.exists(image_path):
@@ -78,13 +85,7 @@ def analyze_ui_and_generate_fix(image_path: str, html_path: str) -> dict:
         temperature=0.2,
     )
 
-    return json.loads(response.choices[0].message.content)
+    raw_result = json.loads(response.choices[0].message.content)
 
-if __name__ == "__main__":
-    test_image = "ci_viewport.png"
-    test_html = os.path.join("mock_app", "index.html")
-    
-    print("[*] Sending screenshot and HTML to OpenRouter Vision for visual audit...")
-    analysis = analyze_ui_and_generate_fix(test_image, test_html)
-    print("\n[+] Visual Audit Analysis Result:")
-    print(json.dumps(analysis, indent=2))
+    # 🔽 CALL THE DAY 3 VALIDATOR HERE BEFORE RETURNING 🔽
+    return validate_audit_response(raw_result)
