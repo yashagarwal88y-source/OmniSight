@@ -3,37 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniSight Test Store</title>
+  <title>OmniSight Mock E-Commerce App</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
-    .card { background: rgba(125, 125, 125, 0.958); padding: 20px; border-radius: 8px; max-width: 300px; margin: 0 auto; }
-    .product-img { width: 50%; height: 100px; background: #fffefe; border-radius: 4px; }
-    
-    /* DELIBERATE VISUAL BUG */
-    .checkout-btn {
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background-color: #f4f4f9;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    /* Intentional UI Bug: Absolute positioning causing overflow and clipped text on mobile viewports */
+    .cta-button {
       position: absolute;
-      left: -9999px; /* Pushes the button off-screen visually */
-      background: #007bff;
-      color: rgb(255, 255, 255);
+      right: -50px;
+      background-color: #007bff;
+      color: white;
       padding: 12px 24px;
       border: none;
       border-radius: 4px;
+      font-weight: bold;
+    }
+    .price-tag {
+      font-size: 20px;
+      color: #28a745;
+      margin-top: 8px;
     }
   </style>
-
-<style>
-/* Auto-applied by OmniSight Self-Healing Agent */
-.checkout-btn { position: static; left: auto; display: block; width: 100%; margin-top: 15px; }
-</style>
 </head>
 <body>
   <div class="card">
-    <div class="product-img"></div>
-    <h2>Wireless Headphones with bluetooth 5.0
-    </h2>
-    <p>Price: $99.90</p>
-    <!-- The button exists in DOM, but is visually hidden off-screen -->
-    <button class="checkout-btn">Checkout Now</button>
+    <h2>Smart Wireless Headphones</h2>
+    <p>Noise-canceling over-ear headphones with 30-hour battery life and spatial audio support.</p>
+    <div class="price-tag">$199.99</div>
+    <!-- Button triggers visual overflow on 375px mobile viewport -->
+    <button class="cta-button">Buy Now</button>
   </div>
 </body>
 </html>
