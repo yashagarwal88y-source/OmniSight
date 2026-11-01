@@ -4,6 +4,16 @@ import time
 from browser_engine import capture_viewport
 from vlm_engine import analyze_ui_and_generate_fix
 
+"""
+OmniSight Main Orchestrator (Week 3 Release)
+--------------------------------------------
+Coordinates visual QA lifecycle:
+1. Viewport rendering via Playwright
+2. Multimodal anomaly audit via OpenRouter VLM
+3. Dynamic DOM CSS injection
+4. Re-verification snapshot generation
+"""
+
 def apply_css_fix(html_file_path: str, css_code: str) -> bool:
     """Safely injects generated CSS fix into HTML file inside a style block."""
     try:
