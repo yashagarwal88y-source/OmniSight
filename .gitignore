@@ -1,7 +1,17 @@
+# Virtual Environment
 venv/
-__pycache__/
-*.png
+
+# Environment Variables
 .env
-test_key.py
-list_models.py
-list_groq_models.py
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Screenshot Test Artifacts
+ci_viewport.png
+ci_viewport_fixed.png
+test_viewport.png
+
+# IDE Config
+.vscode/
